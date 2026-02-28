@@ -18,9 +18,7 @@ function App() {
     try {
       const response = await fetch("http://127.0.0.1:8000/analyze", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: value }),
       });
 
@@ -40,204 +38,211 @@ function App() {
     const delay = setTimeout(() => {
       analyzeText(text);
     }, 500);
-
     return () => clearTimeout(delay);
   }, [text]);
 
   const getRiskColor = (level) => {
-    if (!level) return "white";
-    if (level === "High") return "#ff4d4f";
-    if (level === "Medium") return "#faad14";
-    return "#52c41a";
-  };
-
-  const getBarColor = (score) => {
-    if (score > 60) return "#ff4d4f";
-    if (score > 30) return "#faad14";
-    return "#52c41a";
-  };
-
-  const getScoreColor = (value) => {
-    if (value >= 20) return "#ff4d4f";
-    if (value > 0) return "#faad14";
-    return "#52c41a";
+    if (level === "High") return "#ef4444";
+    if (level === "Medium") return "#f59e0b";
+    return "#22c55e";
   };
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f172a, #1e293b)",
-        fontFamily: "Arial, sans-serif",
-        padding: "60px",
-        color: "white",
+        background: "#f3f4f6",
+        fontFamily: "Inter, sans-serif",
+        padding: "40px",
       }}
     >
-      <h1
-        style={{
-          textAlign: "center",
-          fontSize: "48px",
-          marginBottom: "50px",
-        }}
-      >
-        Social Engineering Risk Scorer
-      </h1>
+      <h2 style={{ marginBottom: "30px" }}>
+        Context-aware privacy exposure detection
+      </h2>
 
-      <textarea
-        rows="6"
-        style={{
-          width: "100%",
-          padding: "20px",
-          borderRadius: "14px",
-          border: "none",
-          fontSize: "18px",
-          backgroundColor: "#2d3748",
-          color: "white",
-          outline: "none",
-        }}
-        placeholder="Paste social media bio or post..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-
-      {loading && (
-        <p
-          style={{
-            marginTop: "20px",
-            textAlign: "center",
-            color: "#4da6ff",
-            fontWeight: "bold",
-          }}
-        >
-          ⚡ AI analyzing in real-time...
-        </p>
-      )}
-
-      {error && (
-        <p style={{ color: "#ff4d4f", marginTop: "20px" }}>{error}</p>
-      )}
-
-      {result && (
-        <div
-          style={{
-            marginTop: "70px",
-            background: "rgba(255,255,255,0.05)",
-            backdropFilter: "blur(12px)",
-            padding: "50px",
-            borderRadius: "20px",
-            boxShadow: "0 0 40px rgba(0,0,0,0.5)",
-          }}
-        >
-          <h2
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 420px", gap: "40px" }}>
+        {/* LEFT SIDE */}
+        <div>
+          <textarea
+            rows="8"
             style={{
-              textAlign: "center",
-              fontSize: "32px",
+              width: "100%",
+              padding: "16px",
+              borderRadius: "12px",
+              border: "1px solid #d1d5db",
+              fontSize: "15px",
+              resize: "none",
             }}
-          >
-            Risk Score: {result.score}/100
-          </h2>
+            placeholder="Paste social media content..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
 
-          {/* 🔥 Animated Progress Bar */}
-          <div
-            style={{
-              height: "12px",
-              backgroundColor: "#1e293b",
-              borderRadius: "20px",
-              marginTop: "20px",
-              overflow: "hidden",
-            }}
-          >
+          {loading && <p style={{ marginTop: "10px" }}>Analyzing...</p>}
+
+          {result && (
             <div
               style={{
-                height: "100%",
-                width: `${result.score}%`,
-                background: getBarColor(result.score),
-                transition: "width 0.6s ease",
+                marginTop: "25px",
+                padding: "25px",
+                background: "white",
+                borderRadius: "16px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
               }}
-            />
-          </div>
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ fontSize: "56px", fontWeight: "700" }}>
+                  {result.score}
+                </div>
 
-          <h2
-            style={{
-              textAlign: "center",
-              color: getRiskColor(result.risk_level),
-              fontSize: "42px",
-              fontWeight: "bold",
-              marginTop: "20px",
-              textShadow:
-                result.risk_level === "High"
-                  ? "0 0 20px rgba(255,77,79,0.8)"
-                  : "none",
-            }}
-          >
-            {result.risk_level} Risk
-          </h2>
-
-          <p
-            style={{
-              textAlign: "center",
-              opacity: 0.8,
-              fontSize: "18px",
-              marginTop: "10px",
-            }}
-          >
-            {result.risk_summary}
-          </p>
-
-          <h3 style={{ marginTop: "60px", fontSize: "24px" }}>
-            Exposure Breakdown
-          </h3>
-
-          {/* 🔥 Grid Layout */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "20px",
-              marginTop: "30px",
-            }}
-          >
-            {Object.entries(result.breakdown).map(([key, value]) => (
-              <div
-                key={key}
-                style={{
-                  background: "#0b1a2b",
-                  padding: "20px",
-                  borderRadius: "12px",
-                }}
-              >
-                <h4 style={{ textTransform: "capitalize" }}>{key}</h4>
-                <p
+                <div
                   style={{
-                    fontSize: "22px",
-                    fontWeight: "bold",
-                    color: getScoreColor(value),
+                    padding: "6px 14px",
+                    borderRadius: "20px",
+                    background: "#fee2e2",
+                    color: getRiskColor(result.risk_level),
+                    fontWeight: "600",
                   }}
                 >
-                  {value}
-                </p>
+                  {result.risk_level}
+                </div>
               </div>
-            ))}
-          </div>
 
-          <h3 style={{ marginTop: "60px", fontSize: "24px" }}>
-            Recommendations
-          </h3>
+              {/* UPDATED BAR SECTION */}
+              <div style={{ marginTop: "15px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "14px",
+                    marginBottom: "6px",
+                  }}
+                >
+                  <span>Exposure Level</span>
+                  <span>{result.score}/100</span>
+                </div>
 
-          {Array.isArray(result.recommendations) &&
-          result.recommendations.length ? (
-            <ul style={{ marginTop: "20px", fontSize: "18px" }}>
-              {result.recommendations.map((rec, idx) => (
-                <li key={idx} style={{ marginBottom: "12px" }}>
-                  {rec}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p style={{ opacity: 0.7 }}>No recommendations available</p>
+                <div
+                  style={{
+                    height: "8px",
+                    background: "#e5e7eb",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${result.score}%`,
+                      height: "100%",
+                      background: getRiskColor(result.risk_level),
+                      borderRadius: "6px",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <p style={{ marginTop: "15px", color: "#6b7280" }}>
+                {result.risk_summary}
+              </p>
+            </div>
           )}
         </div>
-      )}
+
+        {/* RIGHT SIDE */}
+        {result && (
+          <div>
+            <h3 style={{ marginBottom: "15px" }}>CATEGORY BREAKDOWN</h3>
+
+            {Object.entries(result.breakdown).map(([key, value]) => {
+              const percent = Math.round(value * 100);
+
+              return (
+                <div
+                  key={key}
+                  style={{
+                    background: "white",
+                    padding: "16px",
+                    borderRadius: "14px",
+                    marginBottom: "15px",
+                    boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <strong style={{ textTransform: "capitalize" }}>{key}</strong>
+                    <span>{percent}%</span>
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "8px",
+                      height: "6px",
+                      background: "#e5e7eb",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${percent}%`,
+                        height: "100%",
+                        background: "#3b82f6",
+                        borderRadius: "6px",
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* RECOMMENDATIONS */}
+            <h3 style={{ marginTop: "25px" }}>RECOMMENDATIONS</h3>
+
+            {result.recommendations.map((rec, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: "12px",
+                  background: "#fff7ed",
+                  border: "1px solid #facc15",
+                  borderRadius: "12px",
+                  marginBottom: "12px",
+                }}
+              >
+                ⚠ {rec}
+              </div>
+            ))}
+
+            {/* 🆕 ADVERSARIAL RISK SIMULATION */}
+            {result.attacker_inference && result.attacker_inference.length > 0 && (
+              <>
+                <h3 style={{ marginTop: "30px" }}>
+                  Adversarial Risk Simulation
+                </h3>
+
+                <div
+                  style={{
+                    background: "#1f2937",
+                    color: "white",
+                    padding: "18px",
+                    borderRadius: "14px",
+                    marginTop: "12px",
+                  }}
+                >
+                  <p style={{ marginBottom: "12px", fontWeight: "600" }}>
+                    What an attacker can infer from this post:
+                  </p>
+
+                  <ul style={{ paddingLeft: "18px" }}>
+                    {result.attacker_inference.map((item, i) => (
+                      <li key={i} style={{ marginBottom: "8px" }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
